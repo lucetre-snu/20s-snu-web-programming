@@ -4,10 +4,11 @@ const Game = function() {
   let height;
   let numColors;
   let cubes = [];
-  const colors = ["red", "lime", "cyan", "magenta", "yellow", "blue", 'black'];
+  const colors = ["red", "lime", "cyan", "magenta", "yellow", "dodgerblue", "dimgray", "indianred"];
   let points = 0;
   const gameBoard = document.getElementById("gameBoard");
   const textlog = document.getElementById("textlog");
+  const scoreDom = document.getElementById("score");
 
   let swapCube1 = null;
   let swapCube2 = null;
@@ -17,6 +18,10 @@ const Game = function() {
       textlog.innerText += logContent + '\n';
     else
       textlog.innerText = logContent + '\n';
+  }
+
+  this.printScore = () => {
+    scoreDom.textContent = points;
   }
 
   this.isCubeAdjacent = (cube1, cube2) => {
@@ -29,9 +34,11 @@ const Game = function() {
     width = _width;
     height = _height;
     numColors = _numColors;
+    points = 0;
+    this.printScore();
     
     this.printLog('Welcome to Code Crush Saga!', false);
-    this.printLog(`Width(${width}), Height(${height}), Colors(${numColors})`);
+    console.log(`Width(${width}), Height(${height}), Colors(${numColors})`);
 
     for (let i = 0; i < height; i++) {
       const row = [];
@@ -45,7 +52,6 @@ const Game = function() {
       }
       cubes.push(row);
     }
-    console.log(cubes);
   };
 
   this.render = () => {
@@ -74,7 +80,6 @@ const Game = function() {
             swapCube2.cubeDom.setAttribute('selected', false);
             if (this.isCubeAdjacent(swapCube1.cube, swapCube2.cube)) {
               this.swap(swapCube1.cube, swapCube2.cube);
-              this.printLog('Swap completed.');
             }
             else
               this.printLog('These cubes are not adjacent.');
@@ -123,19 +128,14 @@ const Game = function() {
           horizontalMatch[j][i] = horizontalMatch[j][i+1];
       }
     }
-    
-    let result = '';
+
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
         if (verticalMatch[i][j] || horizontalMatch[j][i]) {
           matchedCubes.push(cubes[i][j]);
-          result += '1 '
         }
-        else result += '0 '
       }
-      result += '\n';
     }
-    console.log(result);
     return matchedCubes;
   };
 
@@ -170,7 +170,6 @@ const Game = function() {
   }
 
   this.reorgCubes = matchedCubes => {
-    this.printLog('Reorganizing Cubes...');
     for (let i = 0; i < matchedCubes.length; i++) {
       let row = matchedCubes[i].row;
       let col = matchedCubes[i].column;
@@ -184,16 +183,28 @@ const Game = function() {
     const matchedCubes = this.getMatchedCubes();
     if (matchedCubes.length === 0) return;
     points += matchedCubes.length;
+    this.printScore();
     this.reorgCubes(matchedCubes);
   };
 
   this.swap = (cube1, cube2) => {
-    const temp = cube1.color;
+    let temp = cube1.color;
     cube1.color = cube2.color;
     cube2.color = temp;
 
+    if (! this.getMatchedCubes().length) {
+      temp = cube1.color;
+      cube1.color = cube2.color;
+      cube2.color = temp;
+
+      this.printLog('Swap cannot be done.');
+      return;
+    }
+
+    this.printLog('Reorganizing Cubes...');
     this.render();
     this.handle3Match();
+    this.printLog('Swap completed.');
   };
 };
 

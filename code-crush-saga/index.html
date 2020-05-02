@@ -11,13 +11,24 @@
       <h1>Code Crush Saga</h1>
       
       <form id="form">
-        <label>Height: <input type="number" name="height" placeholder="6 ~ 10" min="6" max="10" />, </label>
-        <label>Width: <input type="number" name="width" placeholder="6 ~ 10" min="6" max="10" />, </label>
-        <label>Colors: <input type="number" name="colors" placeholder="5 ~ 8" min="5" max="8" /></label>
-        <input type="submit" value="시작" />
+        <table>
+          <tr>
+            <th>height</th>
+            <th>width</th>
+            <th>colors</th>
+            <td rowspan="2"><input class="button" type="submit" value="시작" /></td>
+          </tr>
+          <tr>
+            <td><input type="number" name="height" placeholder="6 ~ 10" min="6" max="10" /></td>
+            <td><input type="number" name="width" placeholder="6 ~ 10" min="6" max="10" /></td>
+            <td><input type="number" name="colors" placeholder="5 ~ 8" min="5" max="8" /></td>
+          </tr>
+        </table>
       </form>
-      <div id="app"></div>
       <hr>
+      <div id="app">
+        <h3>Score <span id="score">0</span></h5>
+      </div>
       <div id="gameBoard"></div>
     </div>
     <footer>

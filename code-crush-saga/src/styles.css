@@ -3,8 +3,44 @@ body {
   font-family: sans-serif;
 }
 
+table {
+  display: inline;
+  font-size: 16px;
+  color: dodgerblue;
+}
+
 input {
-  width: 70px;
+  width: 100px;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid dodgerblue;
+  border-radius: 2px;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.button {
+  width: 50px;
+  border: none;
+  text-align: center;
+  font-weight: bold;
+  padding: 12px 0px;
+  display: inline-block;
+  font-size: 18px;
+  color: dodgerblue;
+  background-color: white;
+  border: 2px solid dodgerblue;
+  border-radius: 4px;
+  transition-duration: 0.4s;
+}
+
+.button:hover {
+  background-color: dodgerblue;
+  color: white;
 }
 
 .cube-row {
@@ -28,21 +64,24 @@ input {
   outline: 1px solid black;
 }
 
+.dimgray {
+  background-color: dimgray;
+}
+
+.dodgerblue {
+  background-color: dodgerblue;
+}
 
 .red {
   background-color: red;
 }
 
-.black {
-  background-color: black;
+.indianred {
+  background-color: indianred;
 }
 
 .cyan {
   background-color: cyan;
-}
-
-.orangered {
-  background-color: orangered;
 }
 
 .lime {
@@ -53,30 +92,10 @@ input {
   background-color: magenta;
 }
 
-.purple {
-  background: purple;
-}
-
-.coral {
-  background: coral;
-}
-
 .white {
   background: white;
 }
 
-.green {
-  background: green;
-}
-
 .yellow {
   background: yellow;
-}
-
-.blue {
-  background: blue;
-}
-
-.pink {
-  background: pink;
 }
