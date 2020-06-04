@@ -1,52 +1,24 @@
 import React, {useEffect, useState} from 'react';
 
 import './App.css';
-
-class Api {
-  constructor() {
-    this.BASE_URL = 'http://snu-chat2.herokuapp.com';
-    this.key = localStorage.getItem('key');
-  }
-  signup(name) {
-    return fetch(this.BASE_URL + '/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: `name=${name}`
-    }).then(res => res.json());
-  }
-  getRooms() {
-    return fetch(this.BASE_URL + '/rooms').then(res => res.json());
-  };
-
-  createRoom(name) {
-    return fetch(this.BASE_URL + '/rooms', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Key ${this.key}`
-      },
-      body: `name=${name}`
-    }).then(res => res.json());
-  }
-
-  getRoom(roomId) {
-    return fetch(`${this.BASE_URL}/rooms/${roomId}`).then(res => res.json());
-  };
-}
-
+import Api from './Api';
+import { Chat } from './Chat';
+import { Button } from '@material-ui/core';
 const api = new Api();
 
+//props => const 
+//useState
 
-
-function App() {
+function App(props) {
   const [user, setUser] = useState(null);
   const [signupUserName, setSignupUserName] = useState('');
   const [rooms, setRooms] = useState([]);
   const [roomName, setRoomName] = useState('');
+  const [currentRoom, setCurrentRoom] = useState(null);
+  const [chats, setChats] = useState([]);
+
+  const [chatMessage, setChatMessage] = useState('');
   const users = [];
-  const chats = [];
 
   const reloadRooms = () => {
     api.getRooms()
@@ -72,7 +44,6 @@ function App() {
       setUser(res);
       localStorage.setItem('name', res.name);
       localStorage.setItem('key', res.key);
-      api.key = res.key;
     });
   }
 
@@ -82,6 +53,23 @@ function App() {
     .then(res => {
       reloadRooms();
     });
+  }
+
+  const joinRoom = async (room) => {
+    await reloadChats(room._id);
+    setCurrentRoom(room);
+  }
+
+  const reloadChats = async (roomId) => {
+    const chats = await api.getChats(roomId);
+    setChats(chats);
+  }
+
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    await api.sendMessage(currentRoom._id, chatMessage);
+    setChatMessage('');
+    reloadChats(currentRoom._id);
   }
   
   return (
@@ -104,7 +92,7 @@ function App() {
               <h3>방리스트</h3>
               <ul>
                 { rooms.length === 0 ? <h4>개설된 방이 없습니다</h4> :
-                 rooms.map(room => <div> {room.name} </div>)}
+                 rooms.map(room => <Button color="primary" variant='outlined' key={room._id} onClick={e => joinRoom(room)}>  {room.name} </Button>)}
               </ul>
 
               <form>
@@ -121,14 +109,18 @@ function App() {
             </div>
           </div>
           <div id="chatRoom" style={{ width: '800px', border: '1px solid black', flexDirection: 'column', justifyContent: 'space-around', display: 'flex'}}>
-            <h3>채팅</h3>
-            <ul id="chats">
-              { chats.map(room => <div> {room.name} </div>)}
-            </ul>
-            <form>
-              <input type="text" placeholder="채팅 내용을 입력하세요." />
-              <input type="submit" value="입력" />
-            </form>
+            { currentRoom ? 
+            <div>
+              <h3>{currentRoom.name} 채팅</h3>
+              <ul id="chats">
+                { chats.map(chat => <Chat chat={chat} />)}
+              </ul>
+              <form>
+                <input type="text" placeholder="채팅 내용을 입력하세요." value={chatMessage} onChange={e => setChatMessage(e.target.value)}/>
+                <input type="submit" value="입력" onClick={ sendMessage }/>
+              </form>
+            </div>
+            : <div><h3>방에 입장해주세요</h3></div> }
           </div>
         </div>
       </div>
