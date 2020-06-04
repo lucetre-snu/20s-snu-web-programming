@@ -19,3 +19,11 @@
       * Standard: https://github.com/standard/standard
     * Q. What format do you want your config file to be in?
       * JavaScript
+* react create project
+  * `npx create-react-app my-app`
+* window.localStorage
+  * `localStorage.setItem(key, value);`
+    * `localStorage.setItem('obj', JSON.stringify(obj));`
+    * `JSON.parse(localStorage.getItem('obj'));`
+  * `localStorage.getItem(key);`
+  * `localStorage.removeItem(key);`
