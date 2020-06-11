@@ -13,12 +13,21 @@ export default class Api {
     }
 
     signup(name) {
-      return fetch(this.BASE_URL + '/login', {
+      return fetch(this.BASE_URL + '/signup', {
         method: 'POST',
         headers: this.makeHeaders(),
         body: `name=${name}`
       }).then(res => res.json());
     }
+
+    login() {
+      console.log(localStorage);
+      return fetch(this.BASE_URL + '/login', {
+        method: 'POST',
+        headers: this.makeHeaders(true)
+      }).then(res => res.json());
+    }
+
     getRooms() {
       return fetch(this.BASE_URL + '/rooms').then(res => res.json());
     };

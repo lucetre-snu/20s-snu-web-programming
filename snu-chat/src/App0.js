@@ -9,11 +9,9 @@ const api = new Api();
 //props => const 
 //useState
 
-let loadMessageInterval = null;
-
-function App() {
+function App(props) {
   const [user, setUser] = useState(null);
-  const [signupUserName, setSignupUserName] = useState('');
+  const [userName, setUserName] = useState('');
   const [rooms, setRooms] = useState([]);
   const [roomName, setRoomName] = useState('');
   const [currentRoom, setCurrentRoom] = useState(null);
@@ -32,59 +30,55 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if(loadMessageInterval) {
-      clearInterval(loadMessageInterval);
-    }
-    if (currentRoom!=null)
-      loadMessageInterval = setInterval(() => {
-        reloadChats(currentRoom._id);
-      }, 3000);
-  }, [currentRoom]);
-
-  useEffect(() => {
+    const name = localStorage.getItem('name');
     const key = localStorage.getItem('key');
-    if(!key) return;
-      
-    api.login()
-    .then(res => {
-      if(res.success)
-        setUser({name: res.name});
-      else
-        localStorage.removeItem('key');
-    })
-    .catch(err => console.log(err));
+    const login = localStorage.getItem('login');
+    if(login && key && name) {
+      setUser({name, key});
+    }
   }, []);
 
   const onSignup = (e) => {
     e.preventDefault();
-    api.signup(signupUserName)
+    api.signup(userName)
     .then(res => {
-      console.log(res);
       if(res.error){
-        alert(`이미 사용 중인 닉네임 입니다. 다른 이름으로 설정해주세요! ${res.error}`);
+        alert(`${userName}는 이미 사용 중입니다. 다른 이름으로 설정해주세요!`);
         return;
       }
       setUser(res);
       localStorage.setItem('name', res.name);
       localStorage.setItem('key', res.key);
+      localStorage.setItem('login', true);
+    });
+  }
+
+  const onLogin = (e) => {
+    e.preventDefault();
+    api.login()
+    .then(res => {
+      setUser(res);
+      localStorage.setItem('login', true);
     });
   }
 
   const onLogout = (e) => {
     e.preventDefault();
     setUser(null);
+    localStorage.setItem('login', false);
+    // localStorage.removeItem('name');
+    // localStorage.removeItem('key');
   }
 
   const onCreateRoom = (e) => {
     e.preventDefault();
     api.createRoom(roomName)
-    .then(() => {
+    .then(res => {
       reloadRooms();
     });
   }
 
   const joinRoom = async (room) => {
-    await api.getRoom(room._id);
     await reloadChats(room._id);
     setCurrentRoom(room);
   }
@@ -109,21 +103,20 @@ function App() {
           <div style={{width: '300px'}}>
             <div style={{ border: '1px solid black'}}>
               { user ?
-              <div>
-                {user.name} 님 반갑습니다.
-                <br />
-                <Button onClick={onLogout}>로그아웃</Button>
-              </div>
+                <div>
+                  {user.name} 님 안녕하세요
+                  <br />
+                  <input type="submit" value="로그아웃" onClick={onLogout}/>
+                </div>
               : 
-              <div>
-                <form>
-                    <input type="text" value={signupUserName} onChange={e => setSignupUserName(e.target.value)}/>
-                    <input type="submit" value="가입" onClick={onSignup}/>
-                </form>
-              </div>
+              <form>
+                <input type="text" value={userName} onChange={e => setUserName(e.target.value)}/>
+                <br />
+                <input type="submit" value="회원가입" onClick={onSignup}/>
+                <input type="submit" value="로그인" onClick={onLogin}/>
+              </form>
               }
             </div>
-
             <div style={{ border: '1px solid black'}}>
               <h3>방리스트</h3>
               <ul>
@@ -165,5 +158,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
