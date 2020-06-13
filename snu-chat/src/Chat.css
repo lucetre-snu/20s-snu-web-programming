@@ -1,0 +1,34 @@
+div.log {
+  text-align: center;
+}
+
+div.ingoing {
+  text-align: left;
+  float: left;
+  width: 100%;
+  height: 100%;
+  padding-left: 10px;
+}
+
+div.outgoing {
+  text-align: right;
+  float: right;
+  width: 100%;
+  height: 100%;
+  padding-right: 10px;
+}
+
+div.outgoing.bubble {
+  float: right;
+}
+.bubble {
+  position: relative;
+  display: inline-block;
+  max-width: 50%;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+  color: #F9FBFF;
+  background-color: #79C7C5;
+  padding: 5px 16px 5px 16px;
+  border-radius: 25px;
+}

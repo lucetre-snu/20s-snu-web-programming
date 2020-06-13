@@ -21,7 +21,6 @@ export default class Api {
     }
 
     login() {
-      console.log(localStorage);
       return fetch(this.BASE_URL + '/login', {
         method: 'POST',
         headers: this.makeHeaders(true)
@@ -29,7 +28,8 @@ export default class Api {
     }
 
     getRooms() {
-      return fetch(this.BASE_URL + '/rooms').then(res => res.json());
+      return fetch(this.BASE_URL + '/rooms').then(res => res.json())
+      .catch(error => { return {error} });
     };
   
     createRoom(name) {
@@ -37,7 +37,9 @@ export default class Api {
         method: 'POST',
         headers: this.makeHeaders(true),
         body: `name=${name}`
-      }).then(res => res.json());
+      })
+      .then(res => res.json())
+      .catch(error => { return {error} });
     }
   
     getRoom(roomId) {
@@ -45,7 +47,14 @@ export default class Api {
     };
 
     getChats(roomId) {
-      return fetch(`${this.BASE_URL}/rooms/${roomId}/chats`).then(res => res.json());
+      // return fetch(`${this.BASE_URL}/rooms/${roomId}/chats`)
+      return fetch(`${this.BASE_URL}/rooms/${roomId}/chats?createdAtTo=${Date.now()}&order=desc`)
+      .then(res => res.json());
+    }
+
+    reloadChats(roomId, createdAt) {
+      return fetch(`${this.BASE_URL}/rooms/${roomId}/chats?createdAtTo=${createdAt}&order=desc`)
+      .then(res => res.json());
     }
 
     sendMessage(roomId, message) {
