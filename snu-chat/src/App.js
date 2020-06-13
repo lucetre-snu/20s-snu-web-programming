@@ -49,7 +49,7 @@ function App() {
       }, 3000);
       const chatScrollDom = document.getElementById('chat-scroll');
       if(chatScrollDom)
-        chatScrollDom.scrollTop = 1000;
+        chatScrollDom.scrollTop = 2000;
     } // eslint-disable-next-line
   }, [currentRoom]);
 
@@ -110,7 +110,7 @@ function App() {
       
       const roomScrollDom = document.getElementById('room-scroll');
       if(roomScrollDom) {
-        roomScrollDom.scrollTop = 1000;
+        roomScrollDom.scrollTop = 2000;
       }
     });
   }
@@ -161,7 +161,7 @@ function App() {
           const createAt = (chats[15]) ? chats[15].createdAt : Date.now();
           setLastCreatedAt(createAt);
           await reloadChats(currentRoom._id, createAt);
-          chatScrollDom.scrollTop = 1000;
+          chatScrollDom.scrollTop = 2000;
         }
       }
     }
@@ -190,10 +190,10 @@ function App() {
       
       <Paper style={{height: '85%'}}>
         <div style={{ display: 'flex', flexDirection: 'row', height:'100%'}}>
-          <Paper style={{width: '400px'}}>
+          <Paper style={{width: '300px'}}>
             <Paper style={{ display: 'table', width:'100%', height:'10%'}}>
               { user ?
-              <div style={{ display: 'table-cell', verticalAlign: 'middle'}}>
+              <div style={{ paddingTop:'0.3em', display: 'table-cell', verticalAlign: 'middle'}}>
                 {user.name} 님 반갑습니다.
                 <br />
                 <Button onClick={onLogout}>로그아웃</Button>
@@ -202,7 +202,7 @@ function App() {
               <div style={{ display: 'table-cell', verticalAlign: 'middle'}}>
                 { join ?
                 <div>
-                  <span>채팅을 위해 로그인 해주세요.</span>
+                  <span>채팅을 위해<br />로그인 해주세요.</span>
                   <form>
                       <input type="text" value={signupUserName} onChange={e => setSignupUserName(e.target.value)}/>
                       <input type="submit" value="로그인" onClick={onSignup}/>
@@ -210,7 +210,7 @@ function App() {
                 </div>
                 :
                 <div>
-                  <span>SNU-CHAT에 오신 것을 환영합니다.</span>
+                  <span>SNU-CHAT에 오신<br />것을 환영합니다.</span>
                   <form>
                       {cannotJoin?
                       <input type="submit" disabled value="회원가입" onClick={()=>setJoin(true)}/>
@@ -227,9 +227,9 @@ function App() {
             </Paper>
 
             <Paper style={{ height:'45%'}}>
-              <h3>채팅 리스트</h3>
+              <h3 style={{ marginBlockStart:'0.3em', marginBlockEnd:'0.3em'}}>채팅 리스트</h3>
 
-              <div id='room-scroll' style={{height: '75%', maxHeight: '100%', overflow: 'auto', overflowX:'hidden'}}>
+              <div id='room-scroll' style={{height: '80%', maxHeight: '100%', overflow: 'auto', overflowX:'hidden'}}>
                 <ul>
                   { rooms.length === 0 ? <h4>개설된 방이 없습니다</h4> :
                   rooms.map(room => <Button color="primary" style={{textTransform: "none"}} variant="outlined" key={room._id} onClick={() => joinRoom(room)}>  {room.name} </Button>)}
@@ -239,15 +239,15 @@ function App() {
               { user ?
                 <form>
                   <input type="text" value={roomName} onChange={e => setRoomName(e.target.value)}/>
-                  <input type="submit" value="채팅방 생성" onClick={onCreateRoom}/>
+                  <input type="submit" value="생성" onClick={onCreateRoom}/>
                 </form>
               : <div></div>
               }
             </Paper>
-            <Paper style={{ height:'40%'}}>
+            <Paper style={{ height:'45%'}}>
               <h3>유저 리스트</h3>
               <ul>
-                { users.length === 0 ? <h4>참가한 유저가 없습니다.</h4> :
+                { users.length === 0 ? <h4>현재 채팅방에 참가한 유저가 없습니다.</h4> :
                 users.map(user => <div key={user}> {user} </div>)}
               </ul>
             </Paper>
@@ -256,9 +256,9 @@ function App() {
             { currentRoom ? 
             <div style={{ height:'100%'}}>
               <Paper style={{ height:'5%'}}>
-                <h3>{currentRoom.name}</h3>
+                <h3 style={{ marginBlockStart:'0.0em', marginBlockEnd:'0.0em'}}>{currentRoom.name}</h3>
               </Paper>
-              <Paper id='chat-scroll' style={{ height:'80%', maxHeight: '80%', overflow: 'auto', overflowX:'hidden'}} onScroll={ chatScroll }>
+              <Paper id='chat-scroll' style={{ height:'85%', maxHeight: '85%', overflow: 'auto', overflowX:'hidden'}} onScroll={ chatScroll }>
               <ul id="chats">
                 { chats.map(chat => <Chat chat={chat} user={user} key={chat.id} />)}
               </ul>

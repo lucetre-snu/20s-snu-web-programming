@@ -19,6 +19,9 @@ li.chat {
 input[type='submit'] {
   margin-left: 3px;
 }
+input[type='text'] {
+  width: 50%;
+}
 
 html {
   height: 97%;
@@ -34,13 +37,14 @@ form {
 
 textarea {
   margin-top: 0.2vh;
-  width: 90%;
+  width: 60%;
   height: 7vh;
   resize: none;
 }
 
-button.send {
+Button.send {
   margin-top: -7vh;
   margin-left: 0.2em;
   height: 7vh;
+  width: min-content;
 }
